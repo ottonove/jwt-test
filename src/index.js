@@ -4,9 +4,43 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+import * as reducers from './reducers';
+
+// ルーターの設定
+import createBrowserHistory from 'history/createBrowserHistory';
+import { routerReducer, routerMiddleware, ConnectedRouter } from 'react-router-redux';
+
+import thunk from 'redux-thunk';
+
+import logger from 'redux-logger';
+
+// historyインスタンスを作成する処理追加
+const history = createBrowserHistory();
+
+// Storeを作成する
+const store = createStore(
+  combineReducers({
+    ...reducers,
+    router: routerReducer
+  }),
+  // applyMiddleware関数でredux-loggerを設定
+  applyMiddleware(
+    routerMiddleware(history),
+    thunk,
+    logger
+  )
+);
+
+ReactDOM.render(
+  <Provider store={store}>
+    {/*ConnectedRouterコンポーネントを追加*/}
+    <ConnectedRouter history={history}>
+      <App/>
+    </ConnectedRouter>
+  </Provider>
+, document.getElementById('root'));
+
 serviceWorker.unregister();
