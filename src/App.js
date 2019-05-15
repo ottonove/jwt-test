@@ -19,7 +19,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <PrivateRoute path="/dashboard" component={Dashboard}></PrivateRoute>
+        <PrivateRoute path="/dashboard" component_={Dashboard}></PrivateRoute>
         <Route path="/" exact={true} component={Login}></Route>
       </div>
     );
